@@ -3,10 +3,12 @@ import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useMutation } from '@tanstack/react-query'
+import { signIn } from '@/api/sign-in'
 
 
 /* Formulario do ZOD: critérios e armazenamento dos dados colocados no input.
@@ -22,6 +24,9 @@ type SignInForm = z.infer<typeof signInForm>
 
 
 export function SignIn() {
+
+    const [searchParams] = useSearchParams()
+
     /* useForm: HOOK do react-hook usado para gerenciar o estado do formulário, como 
     os valores dos campos de entrada, os erros de validação e o estado de submissão
     Register: registrar os campos do formulário(o que ta no input), rastreia e valida.
@@ -34,7 +39,15 @@ export function SignIn() {
       enquanto os dados tiverem sendo carregados, colocamos la no button um disable
       para impedir que o usuario CLIQUE enquanto tiver sendo carregado. 
      */
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignInForm>()
+    const {
+         register, 
+         handleSubmit, 
+         formState: { isSubmitting },
+         } = useForm<SignInForm>({
+            defaultValues:{
+                email:  searchParams.get('email') ?? ''
+            }
+         })
 
     /*o handle Submit SALVO no useForm vai chamar a função abaixo (signIn), 
     enviando os dados do formulario. Dentro da função abaixo estará salvo 
@@ -47,10 +60,14 @@ export function SignIn() {
 
     */
 
+ const { mutateAsync: authenticate} = useMutation ({
+    mutationFn: signIn,
+ })
+
     async function handleSignIn(data: SignInForm) {
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            await authenticate({email: data.email})
 
             toast.success('Enviamos um link de autenticação para o seu email', {
                 // o action vai criar outra estrutura dentro do toast

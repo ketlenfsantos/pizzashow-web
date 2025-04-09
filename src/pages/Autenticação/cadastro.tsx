@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Link, useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { registerRestaurant } from '@/api/register-restaurant'
 
 
 /* Formulario do ZOD: critérios e armazenamento dos dados colocados no input.
@@ -41,7 +43,9 @@ export function SignUp() {
       enquanto os dados tiverem sendo carregados, colocamos la no button um disable
       para impedir que o usuario CLIQUE enquanto tiver sendo carregado. 
      */
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignUpForm>()
+    const {
+         register, handleSubmit, formState: { isSubmitting }
+         } = useForm<SignUpForm>()
 
     /*o handle Submit SALVO no useForm vai chamar a função abaixo (signUp), 
     enviando os dados do formulario. Dentro da função abaixo estará salvo 
@@ -54,17 +58,27 @@ export function SignUp() {
 
     */
 
+  const {mutateAsync: registerRestaurantFn} = useMutation ({
+    mutationFn: registerRestaurant,
+  })
+
+
     async function handleSignUp(data: SignUpForm) {
         //estrutura para as mensagens do TOAST
         try {
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            await registerRestaurantFn({
+                restaurantName: data.restaurantName,
+                managerName: data.managerName,
+                email: data.email,
+                phone: data.phone,
+            })
 
             toast.success('Restaurante cadastrado com sucesso', {
                 // o action vai criar outra estrutura dentro do toast
                 action: {
                     label: 'Login',
                     // forma de redirecionar usuário via useNavigate (sem precisar de link)
-                    onClick: () => navigate('/sign-in'),
+                    onClick: () => navigate(`/sign-in?email=${data.email}`),
                 },
             })
         } catch {
