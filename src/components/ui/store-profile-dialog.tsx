@@ -128,7 +128,7 @@ function updateManagedRestaurantCache({name, description} : StoreProfileSchema) 
       <Button variant="ghost" type="button"> Cancelar</Button>
       </DialogClose>
       
-      <Button type="submit" variant="sucess" disabled={isSubmitting}> Salvar</Button>
+      <Button type="submit" variant='default' disabled={isSubmitting}> Salvar</Button>
     </DialogFooter>
     </form>
      </DialogContent>
