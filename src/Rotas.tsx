@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { SignIn } from "./pages/Autenticação/login";
-import { LayoutApp } from "./pages/_layouts/app";
 import { LayoutAutenticação } from "./pages/_layouts/autenti";
 import { SignUp } from "./pages/Autenticação/cadastro";
 import { Pedidos } from "./pages/app/pedidos/pedidos";
 import { Dashboard } from "./pages/Dashboard/dashboard";
 import { NotFound } from "./pages/404";
+import { Error } from "./pages/error";
+import { LayoutApp } from "./pages/_layouts/app";
 
 
 
@@ -16,7 +17,8 @@ export const rotas = createBrowserRouter([
     {
         path: '/',
         element: <LayoutApp />,
-        errorElement: <NotFound />,
+        errorElement: <Error />,
+        // errorElement: <NotFound />,
         children: [
             { path: '/', element: <Dashboard />, },
             { path: '/pedidos', element: <Pedidos /> }
@@ -36,4 +38,9 @@ export const rotas = createBrowserRouter([
             },
         ],
     },
+
+    {
+     path: '*',
+     element: <NotFound />,   
+    }
 ])

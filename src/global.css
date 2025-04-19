@@ -26,7 +26,7 @@
     --ring: 0 72.2% 50.6%;
     --radius: 0.5rem;
   }
-
+ 
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -48,16 +48,14 @@
     --input: 0 0% 14.9%;
     --ring: 0 72.2% 50.6%;
   }
+}
 
-
-  
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
+ 
+@layer base {
+  * {
+    @apply border-border;
   }
-
+  body {
+    @apply bg-background text-foreground;
+  }
 }
